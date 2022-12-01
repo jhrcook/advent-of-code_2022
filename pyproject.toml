@@ -17,4 +17,4 @@ dependencies = [
 Home = "https://github.com/jhrcook/advent-of-code_2022"
 
 [project.scripts]
-aoc = "advent_of_code:main"
+aoc = "advent_of_code:app"
