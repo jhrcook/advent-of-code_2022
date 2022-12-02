@@ -118,7 +118,7 @@ def main() -> None:
     res2 = puzzle_2(elf_cals=elf_calories)
     check_result(198041, res2)
 
-    print_results(DAY, result1=res1, result2=res2)
+    print_results(DAY, TITLE, result1=res1, result2=res2)
 
 
 if __name__ == "__main__":

@@ -9,9 +9,10 @@
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![pydocstyle](https://img.shields.io/badge/pydocstyle-enabled-AD4CD3)](http://www.pydocstyle.org/en/stable/)
 
-| Day | Code                                                                     | Stars |
-| ---:| ------------------------------------------------------------------------ | ----- |
-| 1   | [advent_of_code/puzzles/day01.py](advent_of_code/puzzles/day01.py) | ⭐️⭐️  |
+| Day | Code                                                               | Stars |
+| ---:| ------------------------------------------------------------------ | ----- |
+| 1   | [advent_of_code/puzzles/day01.py](advent_of_code/puzzles/day01.py) | ⭐️⭐️   |
+| 2   | [advent_of_code/puzzles/day02.py](advent_of_code/puzzles/day02.py) | ⭐️⭐️   |
 
 ## Setup
 
