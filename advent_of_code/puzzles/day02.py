@@ -167,7 +167,6 @@ def main() -> None:
 
     # Puzzle 1.
     ex_strat = parse_game_strategy(example_strategy_guide)
-    print(ex_strat)
     ex_res = puzzle_1(ex_strat)
     check_result(15, ex_res)
     res1 = puzzle_1(input_strategy)
@@ -178,7 +177,7 @@ def main() -> None:
     ex_res = puzzle_2(ex_strat)
     check_result(12, ex_res)
     res2 = puzzle_2(input_strategy)
-    check_result(12014, res1)
+    check_result(12014, res2)
 
     print_results(DAY, TITLE, result1=res1, result2=res2)
 

@@ -13,6 +13,7 @@
 | ---:| ------------------------------------------------------------------ | ----- |
 | 1   | [advent_of_code/puzzles/day01.py](advent_of_code/puzzles/day01.py) | ⭐️⭐️   |
 | 2   | [advent_of_code/puzzles/day02.py](advent_of_code/puzzles/day02.py) | ⭐️⭐️   |
+| 3   | [advent_of_code/puzzles/day03.py](advent_of_code/puzzles/day03.py) | ⭐️⭐️   |
 
 ## Setup
 
