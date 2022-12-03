@@ -1,11 +1,10 @@
 """Advent of Code 2022 – Day 1. Calorie Counting"""
 
-from pathlib import Path
 from typing import Final
 
 from advent_of_code.checks import check_result
 from advent_of_code.cli_helpers import print_results
-from advent_of_code.data import puzzle_input_file
+from advent_of_code.data import puzzle_input_file, read_file_to_string
 
 DAY: Final[int] = 1
 TITLE: Final[str] = "Calorie Counting"
@@ -41,11 +40,6 @@ class ElfCalorie:
 
     def __repr__(self) -> str:
         return str(self)
-
-
-def _read_file(fpath: Path) -> str:
-    with open(fpath) as f:
-        return "".join(list(f))
 
 
 def parse_elf_calorie_input(data: str) -> list[ElfCalorie]:
@@ -104,7 +98,9 @@ def puzzle_2(elf_cals: list[ElfCalorie]) -> int:
 def main() -> None:
     """Execute puzzles."""
     ex_elfs = parse_elf_calorie_input(ex_input)
-    elf_calories = parse_elf_calorie_input(_read_file(puzzle_input_file(day=DAY)))
+    elf_calories = parse_elf_calorie_input(
+        read_file_to_string(puzzle_input_file(day=DAY))
+    )
 
     # Puzzle 1.
     ex_res = puzzle_1(ex_elfs)

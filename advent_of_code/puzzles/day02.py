@@ -1,12 +1,11 @@
 """Advent of Code 2022 – Day 2. Rock Paper Scissors"""
 
 from enum import Enum
-from pathlib import Path
 from typing import Final
 
 from advent_of_code.checks import check_result
 from advent_of_code.cli_helpers import print_results
-from advent_of_code.data import puzzle_input_file
+from advent_of_code.data import puzzle_input_file, read_file_to_string
 
 DAY: Final[int] = 2
 TITLE: Final[str] = "Rock Paper Scissors"
@@ -31,13 +30,6 @@ def parse_game_strategy(strat_str: str) -> GameStrategy:
         assert len(choices) == 2
         strategy.append((choices[0], choices[1]))
     return strategy
-
-
-def parse_game_strategy_from_file(fpath: Path) -> GameStrategy:
-    """Parse the game strategy from a file."""
-    with open(fpath) as f:
-        strat_str = "".join(list(f))
-    return parse_game_strategy(strat_str=strat_str)
 
 
 class RPSResult(str, Enum):
@@ -163,7 +155,7 @@ def puzzle_2(strategy: GameStrategy) -> int:
 def main() -> None:
     """Execute puzzles."""
     input_file = puzzle_input_file(DAY)
-    input_strategy = parse_game_strategy_from_file(input_file)
+    input_strategy = parse_game_strategy(read_file_to_string(input_file))
 
     # Puzzle 1.
     ex_strat = parse_game_strategy(example_strategy_guide)
