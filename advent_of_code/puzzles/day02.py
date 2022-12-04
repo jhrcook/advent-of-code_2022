@@ -1,11 +1,11 @@
-"""Advent of Code 2022 – Day 2. Rock Paper Scissors"""
+"""Advent of Code 2022 – Day 2. Rock Paper Scissors."""
 
 from enum import Enum
 from typing import Final
 
 from advent_of_code.checks import check_result
 from advent_of_code.cli_helpers import print_results
-from advent_of_code.data import puzzle_input_file, read_file_to_string
+from advent_of_code.data import read_input_to_string
 
 DAY: Final[int] = 2
 TITLE: Final[str] = "Rock Paper Scissors"
@@ -154,8 +154,7 @@ def puzzle_2(strategy: GameStrategy) -> int:
 
 def main() -> None:
     """Execute puzzles."""
-    input_file = puzzle_input_file(DAY)
-    input_strategy = parse_game_strategy(read_file_to_string(input_file))
+    input_strategy = parse_game_strategy(read_input_to_string(day=DAY))
 
     # Puzzle 1.
     ex_strat = parse_game_strategy(example_strategy_guide)

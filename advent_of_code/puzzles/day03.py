@@ -1,11 +1,11 @@
-"""Advent of Code 2022 – Day 3. Rucksack Reorganization"""
+"""Advent of Code 2022 – Day 3. Rucksack Reorganization."""
 
 from string import ascii_lowercase, ascii_uppercase
 from typing import Final
 
 from advent_of_code.checks import check_result
 from advent_of_code.cli_helpers import print_results
-from advent_of_code.data import puzzle_input_file, read_file_to_string
+from advent_of_code.data import read_input_to_string
 
 DAY: Final[int] = 3
 TITLE: Final[str] = "Rucksack Reorganization"
@@ -21,6 +21,8 @@ CrZsJsPPZsGzwwsLwLmpwMDw
 
 
 class Rucksack:
+    """Rucksack data."""
+
     def __init__(self, objects: str) -> None:
         objects = objects.strip()
         self._objects = objects
@@ -35,6 +37,7 @@ class Rucksack:
 
 
 def convert_input_into_rucksacks(input_data: str) -> list[Rucksack]:
+    """Convert input data into rucksack data."""
     rucksacks: list[Rucksack] = []
     for line in input_data.strip().splitlines():
         rucksacks.append(Rucksack(line))
@@ -42,12 +45,14 @@ def convert_input_into_rucksacks(input_data: str) -> list[Rucksack]:
 
 
 def find_object_in_both_compartments(rucksack: Rucksack) -> str:
+    """Find the object in both compartments of a rucksack."""
     in_both = set(rucksack.compartments[0]).intersection(rucksack.compartments[1])
     assert len(in_both) == 1
     return list(in_both)[0]
 
 
 def make_object_priority_table() -> dict[str, int]:
+    """Create an object:priority table."""
     return {k: i + 1 for i, k in enumerate(list(ascii_lowercase + ascii_uppercase))}
 
 
@@ -62,6 +67,7 @@ def puzzle_1(rucksacks: list[Rucksack]) -> int:
 
 
 def find_group_badge(group: list[Rucksack]) -> str:
+    """Find the badge for a group of elves."""
     badge = set(group[0]._objects)
     for r in group[1:]:
         badge = badge.intersection(r._objects)
@@ -83,9 +89,8 @@ def puzzle_2(rucksacks: list[Rucksack]) -> int:
 
 def main() -> None:
     """Execute puzzles."""
-    input_file = puzzle_input_file(DAY)
     ex_rucksacks = convert_input_into_rucksacks(example_input)
-    rucksacks = convert_input_into_rucksacks(read_file_to_string(input_file))
+    rucksacks = convert_input_into_rucksacks(read_input_to_string(DAY))
 
     # Puzzle 1.
     ex_res = puzzle_1(ex_rucksacks)

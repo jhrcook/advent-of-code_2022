@@ -1,11 +1,10 @@
-"""Advent of Code 2022 – Day N. Title"""
+"""Advent of Code 2022 – Day N. Title."""
 
-from pathlib import Path
 from typing import Final
 
 from advent_of_code.checks import check_result
 from advent_of_code.cli_helpers import print_results
-from advent_of_code.data import puzzle_input_file
+from advent_of_code.data import read_input_to_string
 
 DAY: Final[int] = 1
 TITLE: Final[str] = ""
@@ -23,7 +22,13 @@ def puzzle_2() -> None:
 
 def main() -> None:
     """Execute puzzles."""
-    input_file = puzzle_input_file(DAY)
+
+    # Puzzle 1.
+    ...
+
+    # Puzzle 2.
+    ...
+
     print_results(DAY, TITLE, result1=None, result2=None)
 
 

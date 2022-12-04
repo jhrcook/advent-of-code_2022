@@ -1,10 +1,10 @@
-"""Advent of Code 2022 – Day 1. Calorie Counting"""
+"""Advent of Code 2022 – Day 1. Calorie Counting."""
 
 from typing import Final
 
 from advent_of_code.checks import check_result
 from advent_of_code.cli_helpers import print_results
-from advent_of_code.data import puzzle_input_file, read_file_to_string
+from advent_of_code.data import read_input_to_string
 
 DAY: Final[int] = 1
 TITLE: Final[str] = "Calorie Counting"
@@ -98,9 +98,7 @@ def puzzle_2(elf_cals: list[ElfCalorie]) -> int:
 def main() -> None:
     """Execute puzzles."""
     ex_elfs = parse_elf_calorie_input(ex_input)
-    elf_calories = parse_elf_calorie_input(
-        read_file_to_string(puzzle_input_file(day=DAY))
-    )
+    elf_calories = parse_elf_calorie_input(read_input_to_string(day=DAY))
 
     # Puzzle 1.
     ex_res = puzzle_1(ex_elfs)

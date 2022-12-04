@@ -1,10 +1,10 @@
-"""Advent of Code 2022"""
+"""Advent of Code 2022."""
 
 from typing import Callable, Final
 
 from typer import Typer
 
-from advent_of_code.puzzles import day01, day02, day03
+from advent_of_code.puzzles import day01, day02, day03, day04
 
 app = Typer()
 
@@ -14,6 +14,7 @@ PUZZLES: Final[dict[int, Callable[[], None]]] = {
     1: day01.main,
     2: day02.main,
     3: day03.main,
+    4: day04.main,
 }
 
 
