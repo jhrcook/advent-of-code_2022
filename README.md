@@ -14,6 +14,27 @@
 | 1   | [advent_of_code/puzzles/day01.py](advent_of_code/puzzles/day01.py) | ⭐️⭐️   |
 | 2   | [advent_of_code/puzzles/day02.py](advent_of_code/puzzles/day02.py) | ⭐️⭐️   |
 | 3   | [advent_of_code/puzzles/day03.py](advent_of_code/puzzles/day03.py) | ⭐️⭐️   |
+| 4   | [advent_of_code/puzzles/day04.py](advent_of_code/puzzles/day04.py) | ⭐️⭐️   |
+<!-- | 5   | [advent_of_code/puzzles/day05.py](advent_of_code/puzzles/day05.py) | ⭐️⭐️   | -->
+<!-- | 6   | [advent_of_code/puzzles/day06.py](advent_of_code/puzzles/day06.py) | ⭐️⭐️   | -->
+<!-- | 7   | [advent_of_code/puzzles/day07.py](advent_of_code/puzzles/day07.py) | ⭐️⭐️   | -->
+<!-- | 8   | [advent_of_code/puzzles/day08.py](advent_of_code/puzzles/day08.py) | ⭐️⭐️   | -->
+<!-- | 9   | [advent_of_code/puzzles/day09.py](advent_of_code/puzzles/day09.py) | ⭐️⭐️   | -->
+<!-- | 10  | [advent_of_code/puzzles/day10.py](advent_of_code/puzzles/day10.py) | ⭐️⭐️   | -->
+<!-- | 11  | [advent_of_code/puzzles/day11.py](advent_of_code/puzzles/day11.py) | ⭐️⭐️   | -->
+<!-- | 12  | [advent_of_code/puzzles/day12.py](advent_of_code/puzzles/day12.py) | ⭐️⭐️   | -->
+<!-- | 13  | [advent_of_code/puzzles/day13.py](advent_of_code/puzzles/day13.py) | ⭐️⭐️   | -->
+<!-- | 14  | [advent_of_code/puzzles/day14.py](advent_of_code/puzzles/day14.py) | ⭐️⭐️   | -->
+<!-- | 15  | [advent_of_code/puzzles/day15.py](advent_of_code/puzzles/day15.py) | ⭐️⭐️   | -->
+<!-- | 16  | [advent_of_code/puzzles/day16.py](advent_of_code/puzzles/day16.py) | ⭐️⭐️   | -->
+<!-- | 17  | [advent_of_code/puzzles/day17.py](advent_of_code/puzzles/day17.py) | ⭐️⭐️   | -->
+<!-- | 18  | [advent_of_code/puzzles/day18.py](advent_of_code/puzzles/day18.py) | ⭐️⭐️   | -->
+<!-- | 19  | [advent_of_code/puzzles/day19.py](advent_of_code/puzzles/day19.py) | ⭐️⭐️   | -->
+<!-- | 20  | [advent_of_code/puzzles/day20.py](advent_of_code/puzzles/day20.py) | ⭐️⭐️   | -->
+<!-- | 21  | [advent_of_code/puzzles/day21.py](advent_of_code/puzzles/day21.py) | ⭐️⭐️   | -->
+<!-- | 22  | [advent_of_code/puzzles/day22.py](advent_of_code/puzzles/day22.py) | ⭐️⭐️   | -->
+<!-- | 23  | [advent_of_code/puzzles/day23.py](advent_of_code/puzzles/day23.py) | ⭐️⭐️   | -->
+<!-- | 24  | [advent_of_code/puzzles/day24.py](advent_of_code/puzzles/day24.py) | ⭐️⭐️   | -->
 
 ## Setup
 
