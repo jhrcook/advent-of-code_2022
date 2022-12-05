@@ -61,26 +61,35 @@ class MoveInstructions:
         return str(self)
 
 
+def _split_row_of_crates(row_str: str) -> list[str]:
+    return [row_str[i : i + 3].strip() for i in range(0, len(row_str), 4)]
+
+
 class CrateConfiguration:
     """Crate configuration."""
 
     def __init__(self, config_str: str) -> None:
         self._config_str = config_str
+
+        # 1. Get data in rows.
         rows: list[list[str]] = []
+        n_cols = -1
         for line in config_str.splitlines():
             if line.strip() == "":
                 continue
             if "1" in line:
+                n_cols = max([int(x.strip()) for x in _split_row_of_crates(line)])
                 break
-            crates = [line[i : i + 3].strip() for i in range(0, len(line), 4)]
+            crates = _split_row_of_crates(line)
             crates = [x.replace("[", "").replace("]", "") for x in crates]
             rows.append(crates)
         rows.reverse()
-        n_cols = len(rows[0])
+        assert n_cols > 0
+
+        # 2. Re-arrange the data into columns.
         columns: list[list[str]] = [[] for _ in range(n_cols)]
-        for c in range(len(columns)):
-            for r in range(len(rows)):
-                x = rows[r][c]
+        for row in rows:
+            for c, x in enumerate(row):
                 if x != "":
                     columns[c].append(x)
         self.columns = columns
@@ -94,12 +103,6 @@ class CrateConfiguration:
 
     def __repr__(self) -> str:
         return str(self)
-
-    def move(self, instruction: MoveInstruction) -> None:
-        """Move the crates given a single instruction."""
-        n, f, t = instruction.move, instruction.from_col - 1, instruction.to_col - 1
-        for _ in range(n):
-            self.columns[t].append(self.columns[f].pop())
 
 
 def parse_input_to_crates(
@@ -127,10 +130,17 @@ def parse_input_to_crates(
     return config, instruct
 
 
+def crane_9000_move(config: CrateConfiguration, instruction: MoveInstruction) -> None:
+    """Move the crates given a single instruction."""
+    n, f, t = instruction.move, instruction.from_col - 1, instruction.to_col - 1
+    for _ in range(n):
+        config.columns[t].append(config.columns[f].pop())
+
+
 def puzzle_1(configuration: CrateConfiguration, instructions: MoveInstructions) -> str:
     """Puzzle 1."""
     for instruction in instructions.instructions:
-        configuration.move(instruction)
+        crane_9000_move(configuration, instruction)
     msg = "".join([col[-1] for col in configuration.columns])
     return msg
 
@@ -143,12 +153,12 @@ def puzzle_2() -> None:
 def main() -> None:
     """Execute puzzles."""
     example_config, example_instruct = parse_input_to_crates(example_input)
-    config, insructions = parse_input_to_crates(read_input_to_string(DAY))
+    config, instructions = parse_input_to_crates(read_input_to_string(DAY))
 
     # Puzzle 1.
     exp_res = puzzle_1(example_config, example_instruct)
     check_result("CMZ", exp_res)
-    res1 = puzzle_1(config, insructions)
+    res1 = puzzle_1(config, instructions)
     check_result("RFFFWBPNS", res1)
 
     # Puzzle 2.
