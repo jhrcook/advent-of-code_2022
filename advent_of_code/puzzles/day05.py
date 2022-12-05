@@ -131,7 +131,7 @@ def parse_input_to_crates(
 
 
 def crane_9000_move(config: CrateConfiguration, instruction: MoveInstruction) -> None:
-    """Move the crates given a single instruction."""
+    """Move the crates given a single instruction for crane 9000."""
     n, f, t = instruction.move, instruction.from_col - 1, instruction.to_col - 1
     for _ in range(n):
         config.columns[t].append(config.columns[f].pop())
@@ -145,26 +145,46 @@ def puzzle_1(configuration: CrateConfiguration, instructions: MoveInstructions) 
     return msg
 
 
-def puzzle_2() -> None:
+def crane_9001_move(config: CrateConfiguration, instruction: MoveInstruction) -> None:
+    """Move the crates given a single instruction for crane 9001."""
+    n, f, t = instruction.move, instruction.from_col - 1, instruction.to_col - 1
+    if n == 1:
+        crane_9000_move(config, instruction)
+    else:
+        col = config.columns[f]
+        new_col = col[:-n]
+        config.columns[t] += col[-n:]
+        config.columns[f] = new_col
+
+
+def puzzle_2(configuration: CrateConfiguration, instructions: MoveInstructions) -> str:
     """Puzzle 2."""
-    ...
+    for instruction in instructions.instructions:
+        crane_9001_move(configuration, instruction)
+
+    msg = "".join([col[-1] for col in configuration.columns])
+    return msg
 
 
 def main() -> None:
     """Execute puzzles."""
+    # Puzzle 1.
     example_config, example_instruct = parse_input_to_crates(example_input)
     config, instructions = parse_input_to_crates(read_input_to_string(DAY))
-
-    # Puzzle 1.
     exp_res = puzzle_1(example_config, example_instruct)
     check_result("CMZ", exp_res)
     res1 = puzzle_1(config, instructions)
     check_result("RFFFWBPNS", res1)
 
     # Puzzle 2.
-    ...
+    example_config, example_instruct = parse_input_to_crates(example_input)
+    config, instructions = parse_input_to_crates(read_input_to_string(DAY))
+    exp_res = puzzle_2(example_config, example_instruct)
+    check_result("MCD", exp_res)
+    res2 = puzzle_2(config, instructions)
+    check_result("CQQBBJFCS", res2)
 
-    print_results(DAY, TITLE, result1=res1, result2=None)
+    print_results(DAY, TITLE, result1=res1, result2=res2)
 
 
 if __name__ == "__main__":
