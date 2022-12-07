@@ -17,7 +17,7 @@
 | 4   | [advent_of_code/puzzles/day04.py](advent_of_code/puzzles/day04.py) | ⭐️⭐️   |
 | 5   | [advent_of_code/puzzles/day05.py](advent_of_code/puzzles/day05.py) | ⭐️⭐️   |
 | 6   | [advent_of_code/puzzles/day06.py](advent_of_code/puzzles/day06.py) | ⭐️⭐️   |
-<!-- | 7   | [advent_of_code/puzzles/day07.py](advent_of_code/puzzles/day07.py) | ⭐️⭐️   | -->
+| 7   | [advent_of_code/puzzles/day07.py](advent_of_code/puzzles/day07.py) | ⭐️⭐️   |
 <!-- | 8   | [advent_of_code/puzzles/day08.py](advent_of_code/puzzles/day08.py) | ⭐️⭐️   | -->
 <!-- | 9   | [advent_of_code/puzzles/day09.py](advent_of_code/puzzles/day09.py) | ⭐️⭐️   | -->
 <!-- | 10  | [advent_of_code/puzzles/day10.py](advent_of_code/puzzles/day10.py) | ⭐️⭐️   | -->
