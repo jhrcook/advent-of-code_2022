@@ -14,6 +14,7 @@ from advent_of_code.puzzles import (
     day07,
     day08,
     day09,
+    day10,
 )
 
 app = Typer()
@@ -30,6 +31,7 @@ PUZZLES: Final[dict[int, Callable[[], None]]] = {
     7: day07.main,
     8: day08.main,
     9: day09.main,
+    10: day10.main,
 }
 
 

@@ -8,11 +8,13 @@ def _data_dir() -> Path:
     return Path(os.getcwd()) / "data"
 
 
-def puzzle_input_file(day: int) -> Path:
+def puzzle_input_file(day: int, filename: str | None = None) -> Path:
     """Get path to day's input file."""
-    return _data_dir() / f"day{day:02d}" / "input.txt"
+    if filename is None:
+        filename = "input.txt"
+    return _data_dir() / f"day{day:02d}" / filename
 
 
-def read_input_to_string(day: int) -> str:
+def read_input_to_string(day: int, filename: str | None = None) -> str:
     """Read input data file as a string."""
-    return puzzle_input_file(day=day).read_text()
+    return puzzle_input_file(day=day, filename=filename).read_text()
