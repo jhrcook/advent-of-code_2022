@@ -1,6 +1,6 @@
 """Advent of Code 2022."""
 
-from typing import Callable, Final
+from typing import Final, Protocol
 
 from typer import Typer
 
@@ -16,34 +16,56 @@ from advent_of_code.puzzles import (
     day09,
     day10,
     day11,
+    day12,
 )
 
 app = Typer()
 
 __version__ = "1.0.0"
 
-PUZZLES: Final[dict[int, Callable[[], None]]] = {
-    1: day01.main,
-    2: day02.main,
-    3: day03.main,
-    4: day04.main,
-    5: day05.main,
-    6: day06.main,
-    7: day07.main,
-    8: day08.main,
-    9: day09.main,
-    10: day10.main,
-    11: day11.main,
-}
+
+class AdventOfCodeDayModule(Protocol):
+    """Advent of Code puzzle protocol."""
+
+    DAY: int
+    TITLE: str
+
+    def main(self) -> None:
+        """Main function to run the puzzles for a day of Advent of Code."""
+        ...
+
+
+PUZZLES: Final[list[AdventOfCodeDayModule]] = [
+    day01,
+    day02,
+    day03,
+    day04,
+    day05,
+    day06,
+    day07,
+    day08,
+    day09,
+    day10,
+    day11,
+    day12,
+]
+
+PUZZLES.sort(key=lambda m: m.DAY)
+
+
+def _get_puzzle(day: int) -> AdventOfCodeDayModule:
+    if day > len(PUZZLES):
+        raise ModuleNotFoundError(f"No puzzle for day {day}.")
+    return PUZZLES[day - 1]
 
 
 def _run_all_puzzles() -> None:
-    for fxn in PUZZLES.values():
-        fxn()
+    for puzzle in PUZZLES:
+        puzzle.main()
 
 
 def _run_puzzle(day: int) -> None:
-    PUZZLES[day]()
+    _get_puzzle(day).main()
 
 
 @app.command()
