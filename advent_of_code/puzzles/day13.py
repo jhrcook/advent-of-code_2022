@@ -1,6 +1,9 @@
 """Advent of Code 2022 – Day 13. Distress Signal."""
 
-from typing import Final
+# from __future__ import annotations
+
+from collections.abc import Sequence
+from typing import Final, TypeAlias
 
 from advent_of_code.checks import check_result
 from advent_of_code.cli_helpers import print_results
@@ -35,8 +38,8 @@ example_input = """
 [1,[2,[3,[4,[5,6,0]]]],8,9]
 """
 
-Packet = list[int | "Packet"]
-PacketPair = tuple[Packet, Packet]
+Packet: TypeAlias = list[int] | Sequence["Packet"] | list[int | Sequence["Packet"]]
+PacketPair: TypeAlias = tuple[Packet, Packet]
 
 
 def _parse_packet(line: str) -> Packet:
@@ -91,9 +94,42 @@ def puzzle_1(distress_code: list[PacketPair]) -> int:
     return sum(correct_order)
 
 
-def puzzle_2() -> None:
+def _merge_all_code_packets(packet_pairs: list[PacketPair]) -> list[Packet]:
+    all_packets: list[Packet] = []
+    for a, b in packet_pairs:
+        all_packets.append(a)
+        all_packets.append(b)
+    return all_packets
+
+
+def _all_packets_in_order(packets: list[Packet]) -> bool:
+    for a, b in zip(packets[:-1], packets[1:]):
+        if not packet_pair_in_correct_order(a, b):
+            return False
+    return True
+
+
+def sort_packets(packets: list[Packet]) -> None:
+    """Sort packets."""
+    n_packets = len(packets)
+    while True:
+        for i in range(n_packets - 1):
+            if packet_pair_in_correct_order(packets[i], packets[i + 1]):
+                ...
+            else:
+                packets[i], packets[i + 1] = packets[i + 1], packets[i]
+                break
+        if _all_packets_in_order(packets):
+            return
+
+
+def puzzle_2(distress_code: list[PacketPair]) -> int:
     """Puzzle 2."""
-    ...
+    all_packets = _merge_all_code_packets(distress_code)
+    divider_packets: list[Packet] = [[[2]], [[6]]]
+    all_packets += divider_packets  # Add "divider packets."
+    sort_packets(all_packets)
+    return (all_packets.index([[2]]) + 1) * (all_packets.index([[6]]) + 1)
 
 
 def main() -> None:
@@ -106,9 +142,13 @@ def main() -> None:
     check_result(6101, res1)
 
     # Puzzle 2.
-    ...
+    ex_code = parse_distress_signal_code(example_input)
+    ex_res = puzzle_2(ex_code)
+    check_result(140, ex_res)
+    res2 = puzzle_2(parse_distress_signal_code(read_input_to_string(DAY)))
+    check_result(21909, res2)
 
-    print_results(DAY, TITLE, result1=res1, result2=None)
+    print_results(DAY, TITLE, result1=res1, result2=res2)
 
 
 if __name__ == "__main__":
