@@ -19,6 +19,7 @@ from advent_of_code.puzzles import (
     day12,
     day13,
     day14,
+    day15,
 )
 
 app = Typer()
@@ -52,6 +53,7 @@ PUZZLES: Final[list[AdventOfCodeDayModule]] = [
     day12,
     day13,
     day14,
+    day15,
 ]
 
 PUZZLES.sort(key=lambda m: m.DAY)

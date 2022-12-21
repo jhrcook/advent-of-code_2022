@@ -197,7 +197,7 @@ def puzzle_1(monkeys: list[Monkey]) -> int:
     return _calculate_monkey_business(num_inspects)
 
 
-def puzzle_2(monkeys: list[Monkey]) -> int:
+def puzzle_2(monkeys: list[Monkey]) -> None:
     """Puzzle 2."""
     ...
 
