@@ -98,9 +98,42 @@ def puzzle_1(measurements: list[Measurement], y_check: int) -> int:
     return len(x_marked) - _count_senors_and_beacons_on_row(measurements, y=y_check)
 
 
-def puzzle_2() -> None:
+def tuning_frequency(coord: Coord) -> int:
+    """Calculate the 'tuning frequency' for a given coordinate."""
+    return coord[0] * 4000000 + coord[1]
+
+
+def _get_all_ranges(measurements: list[Measurement], y: int) -> list[tuple[int, int]]:
+    """Get all of the ranges along the x-axis at a given y then sort by the start."""
+    ranges: list[tuple[int, int]] = []
+    for m in measurements:
+        dy = abs(m.sensor[1] - y)  # Difference in sensor y and row being checked.
+        dx = m.distance - dy  # Adjust range of sensor based on the difference.
+        if dx < 0:
+            continue
+        ranges.append((m.sensor[0] - dx, m.sensor[0] + dx))
+    ranges.sort(key=lambda r: r[0])
+    return ranges
+
+
+def puzzle_2(measurements: list[Measurement], search_range: tuple[int, int]) -> int:
     """Puzzle 2."""
-    ...
+    measurements.sort(key=lambda m: m.sensor[0])
+    for y in range(search_range[0], search_range[1]):
+        x_ranges = _get_all_ranges(measurements, y=y)
+        previous_x = x_ranges[0][1]
+        for x_min, x_max in x_ranges[1:]:
+            if search_range[1] <= previous_x:
+                break
+            elif (x_min - previous_x) <= 1:
+                previous_x = max(previous_x, x_min, x_max)
+            else:
+                gap = x_min - previous_x
+                assert gap == 2, "Gap not of length 2."
+                coord = (previous_x + 1, y)
+                print(f"coordinate: {coord}")
+                return tuning_frequency(coord)
+    raise BaseException("No result found :(")
 
 
 def main() -> None:
@@ -114,9 +147,14 @@ def main() -> None:
     check_result(5688618, res1)
 
     # Puzzle 2.
-    ...
+    ex_data = parse_coordinate_input(example_input)
+    ex_res = puzzle_2(ex_data, (0, 20))
+    check_result(56000011, ex_res)
+    measurements = parse_coordinate_input(read_input_to_string(DAY))
+    res2 = puzzle_2(measurements, (0, 4000000))
+    check_result(12625383204261, res2)
 
-    print_results(DAY, TITLE, result1=res1, result2=None)
+    print_results(DAY, TITLE, result1=res1, result2=res2)
 
 
 if __name__ == "__main__":
