@@ -26,7 +26,7 @@
 | 13  | [advent_of_code/puzzles/day13.py](advent_of_code/puzzles/day13.py) | ⭐️⭐️   |
 | 14  | [advent_of_code/puzzles/day14.py](advent_of_code/puzzles/day14.py) | ⭐️⭐️   |
 | 15  | [advent_of_code/puzzles/day15.py](advent_of_code/puzzles/day15.py) | ⭐️⭐️   |
-| 16  | [advent_of_code/puzzles/day16.py](advent_of_code/puzzles/day16.py) | ⭐️   |
+| 16  | [advent_of_code/puzzles/day16.py](advent_of_code/puzzles/day16.py) | ⭐️⭐️   |
 <!-- | 17  | [advent_of_code/puzzles/day17.py](advent_of_code/puzzles/day17.py) | ⭐️⭐️   | -->
 <!-- | 18  | [advent_of_code/puzzles/day18.py](advent_of_code/puzzles/day18.py) | ⭐️⭐️   | -->
 <!-- | 19  | [advent_of_code/puzzles/day19.py](advent_of_code/puzzles/day19.py) | ⭐️⭐️   | -->

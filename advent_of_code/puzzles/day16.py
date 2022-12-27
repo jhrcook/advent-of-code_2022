@@ -6,7 +6,7 @@ import re
 from collections.abc import Iterable
 from copy import copy
 from dataclasses import dataclass
-from functools import lru_cache
+from itertools import product
 from typing import Final
 
 import networkx as nx
@@ -78,11 +78,6 @@ def _open_node_name(v: Valve) -> str:
     return f"open_{v.id}"
 
 
-@lru_cache
-def _remove_open_name(node: str) -> str:
-    return node.removeprefix("open_")
-
-
 def convert_valve_info_to_directed_multigraph(
     valves: Iterable[Valve],
 ) -> nx.MultiDiGraph:
@@ -120,39 +115,44 @@ def convert_valve_info_to_directed_multigraph(
 class ValvePath:
     """Valve path."""
 
-    node: str
-    steps_left: int
-    score: int
-    opened_valves: set[str]
+    def __init__(
+        self, nodes: list[str], steps_left: int, score: int, opened_valves: set[str]
+    ) -> None:
+        self.nodes = sorted(copy(nodes))
+        self.steps_left = steps_left
+        self.score = score
+        self.opened_valves = copy(opened_valves)
 
     def __copy__(self) -> ValvePath:
         return ValvePath(
-            node=self.node,
+            nodes=copy(self.nodes),
             steps_left=self.steps_left,
             score=self.score,
-            opened_valves=self.opened_valves.copy(),
+            opened_valves=copy(self.opened_valves),
         )
 
-    def step(
-        self, to_node: str, add_flow_rate: int = 0, add_opened_valve: str | None = None
-    ) -> None:
-        """Take a step to a neighboring node.
+    def step(self, to_nodes: list[str], gr: nx.Graph) -> None:
+        """Take a step to neighboring nodes.
 
         Args:
-            to_node (str): Node to step to.
-            add_flow_rate (int, optional): Add flow rate (if the new node is an opening
-            valve node). Defaults to 0.
-            add_opened_valve (str | None, optional): Add the node to the set of opened
-            valves. Defaults to None.
+            to_nodes (list[str]): New nodes to step to.
+            gr (nx.Graph): Graph of the network (is not changed).
         """
-        self.node = to_node
+        self.nodes = sorted(copy(to_nodes))
         self.steps_left -= 1
-        self.score += self.steps_left * add_flow_rate
-        if add_opened_valve:
-            self.opened_valves.add(add_opened_valve)
+        for node in to_nodes:
+            if "open" in node:
+                self.score += self.steps_left * gr.nodes[node]["flow_rate"]
+                self.opened_valves.add(node)
+
+    @property
+    def id(self) -> str:
+        """Identifier string for the valve."""
+        opened_valves_id = "__".join(sorted(list(self.opened_valves)))
+        return f"{self.nodes}__{self.steps_left}__{self.score}__{opened_valves_id}"
 
     def __hash__(self) -> int:
-        return hash(f"{self.node}__{self.steps_left}__{self.score}")
+        return hash(self.id)
 
 
 class PathTracker:
@@ -181,8 +181,32 @@ class PathTracker:
 
     def update(self, path: ValvePath) -> None:
         """Update the tracker logging data with a finished path."""
+        if path in self.path_states:
+            self.path_states.add(copy(path))
         self.top_score = max(self.top_score, path.score)
         self.n_paths += 1
+
+
+_shortest_path_lengths: dict[tuple[str, str], int] = {}
+
+
+def _memoize_shortest_path_for_immutable_graph(
+    gr: nx.Graph, source: str, target: str
+) -> int:
+    path = (source, target)
+    if path in _shortest_path_lengths:
+        return _shortest_path_lengths[path]
+
+    path_len = nx.shortest_path_length(gr, source=source, target=target)
+    assert isinstance(path_len, int)
+    _shortest_path_lengths[path] = path_len
+    return path_len
+
+
+def _find_shortest_dist(gr: nx.Graph, nodes: Iterable[str], target: str) -> int:
+    return min(
+        [_memoize_shortest_path_for_immutable_graph(gr, n, target) for n in nodes]
+    )
 
 
 def calculate_potential_max_score(gr: nx.Graph, path: ValvePath) -> int:
@@ -197,21 +221,17 @@ def calculate_potential_max_score(gr: nx.Graph, path: ValvePath) -> int:
         valves could be taken.
     """
     potential_score = path.score
-    for closed_valve in gr.nodes:
-        if "open" not in closed_valve or closed_valve in path.opened_valves:
+    for valve in gr.nodes:
+        if "open" not in valve or valve in path.opened_valves:
             continue
-        fr = gr.nodes[closed_valve]["flow_rate"]
-        shortest_dist = nx.shortest_path_length(gr, path.node, closed_valve)
-        assert isinstance(shortest_dist, int)
-        remaining_time = path.steps_left - shortest_dist
+        remaining_time = path.steps_left - _find_shortest_dist(gr, path.nodes, valve)
         if remaining_time <= 0:
             continue
-        max_add = remaining_time * fr
-        potential_score += max_add
+        potential_score += remaining_time * gr.nodes[valve]["flow_rate"]
     return potential_score
 
 
-def score_paths(
+def find_max_flow_path(
     gr: nx.Graph, path: ValvePath, tracker: PathTracker, all_valves: set[str]
 ) -> None:
     """Score paths through the cave to maximize flow rate.
@@ -226,38 +246,25 @@ def score_paths(
     #   1. If the state has already been seen.
     #   2. If there are no steps left
     #   3. If all the valves have been visited already.
+    #   4. If possible maximum score is less than the current max score.
     if (
         tracker.have_seen_path(path)
         or path.steps_left == 0
         or path.steps_left == all_valves
+        or calculate_potential_max_score(gr, path) <= tracker.top_score
     ):
         tracker.update(path)
         return
 
-    # Finish if the possible maximum from the current state is less than the max already
-    # found.
-    potential = calculate_potential_max_score(gr, path)
-    if potential <= tracker.top_score:
-        tracker.update(path)
-        return
-
     # Iterate over possible next steps and recurse into this function.
-    for neighbor in gr.neighbors(path.node):
-        if "open" in neighbor:
-            if neighbor not in path.opened_valves:
-                new_path = copy(path)
-                new_path.step(
-                    to_node=neighbor,
-                    add_flow_rate=gr.nodes[neighbor]["flow_rate"],
-                    add_opened_valve=neighbor,
-                )
-                score_paths(
-                    gr=gr, path=new_path, tracker=tracker, all_valves=all_valves
-                )
-        else:
-            new_path = copy(path)
-            new_path.step(to_node=neighbor)
-            score_paths(gr=gr, path=new_path, tracker=tracker, all_valves=all_valves)
+    for neighbors in product(*[gr.neighbors(n) for n in path.nodes]):
+        if any([n in path.opened_valves for n in neighbors]):
+            continue
+        if len(neighbors) != len(set(neighbors)):
+            continue
+        new_path = copy(path)
+        new_path.step(to_nodes=list(neighbors), gr=gr)
+        find_max_flow_path(gr=gr, path=new_path, tracker=tracker, all_valves=all_valves)
 
 
 def _collect_all_valve_names(gr: nx.Graph) -> set[str]:
@@ -271,26 +278,29 @@ def _collect_all_valve_names(gr: nx.Graph) -> set[str]:
 @timer
 def puzzle_1(valves: Iterable[Valve], depth: int) -> int:
     """Puzzle 1."""
-    # print(f"search depth: {depth}")
     gr = convert_valve_info_to_directed_multigraph(valves)
-    # print(gr)
-    # nx.draw_networkx(gr, with_labels=True)
-    # plt.show()
     tracker = PathTracker()
-    score_paths(
+    find_max_flow_path(
         gr,
-        path=ValvePath("AA", depth, score=0, opened_valves=set()),
+        path=ValvePath(["AA"], depth, score=0, opened_valves=set()),
         tracker=tracker,
         all_valves=_collect_all_valve_names(gr),
     )
-    # print(f"number of paths: {tracker.n_paths}")
-    # print(f"max. score: {tracker.top_score}")
     return tracker.top_score
 
 
-def puzzle_2() -> None:
+@timer
+def puzzle_2(valves: Iterable[Valve], depth: int) -> int:
     """Puzzle 2."""
-    ...
+    gr = convert_valve_info_to_directed_multigraph(valves)
+    tracker = PathTracker()
+    find_max_flow_path(
+        gr,
+        path=ValvePath(["AA", "AA"], depth, score=0, opened_valves=set()),
+        tracker=tracker,
+        all_valves=_collect_all_valve_names(gr),
+    )
+    return tracker.top_score
 
 
 def main() -> None:
@@ -304,9 +314,14 @@ def main() -> None:
     check_result(1701, res1)
 
     # Puzzle 2.
-    ...
+    ex_valves = parse_valve_data(example_input)
+    ex_res = puzzle_2(ex_valves.values(), depth=26)
+    check_result(1707, ex_res)
+    valves = parse_valve_data(read_input_to_string(DAY))
+    res2 = puzzle_2(valves.values(), depth=26)
+    check_result(2455, res2)
 
-    print_results(DAY, TITLE, result1=res1, result2=None)
+    print_results(DAY, TITLE, result1=res1, result2=res2)
 
 
 if __name__ == "__main__":
